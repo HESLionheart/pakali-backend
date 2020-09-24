@@ -3,6 +3,23 @@ import coursesSchema from '../Models/courses.js'
 
 const router = express.Router()
 
+async function dateFormating(req, res, next) {
+    let [day, month, year] = req.body.dateToAdd.split('.')
+    try { 
+        if(day.length === 1) {
+            day = `0${day}`
+        }
+        if(month.length === 1) {
+            month = `0${month}`
+        }
+    } catch(err) {
+        return res.status(500).json({message: err.message})
+    }
+
+    res.dateInFormat = `${day}.${month}.${year}`;
+    next()
+}
+
 // DELETE
 router.delete('/', async (req, res) => {
     
@@ -24,18 +41,17 @@ router.post('/', async (req, res) => {
     }
 })
 
-router.patch('/:id', async(req, res) => {
+// UPDATE (adding date to course)
+router.patch('/:id', dateFormating, async(req, res) => {
     try {
         const courseToUpdate = await coursesSchema.findById(req.params.id)
-        // if(!courseToUpdate) {
-        //     return res.status(404).json({message: "Can't find trick :("})
-        // }
-
-        await courseToUpdate.dates.push(req.body.dateToAdd)
+        await courseToUpdate.dates.push(res.dateInFormat)
         await courseToUpdate.save()
     } catch(err) {
         res.status(500).json({message: err.message})
     }
+
+    res.json(res.dateInFormat)
 })
 
 // GET all 

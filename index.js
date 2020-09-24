@@ -1,8 +1,11 @@
 import Express from 'express'
-import indexRouter from './routes/index.js'
 import bodyParser from 'body-parser'
 import mongoose from 'mongoose'
 import dotenv from 'dotenv'
+
+// Routes
+import coursesRouter from './routes/courses.js'
+import profileRouter from './routes/profile.js'
 
 dotenv.config()
 
@@ -34,8 +37,8 @@ app.use(function(req, res, next) {
 });
 
 // Router
-
-app.use('/courses', indexRouter)
+app.use('/profile', profileRouter)
+app.use('/courses', coursesRouter)
 app.use(Express.json())
 
 app.listen(port, () => console.log("Listening on port " + port))
