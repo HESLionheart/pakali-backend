@@ -59,7 +59,6 @@ router.get('/', async (req, res) => {
     try {
         const courses = await coursesSchema.find()
         res.json(courses) 
-
     } catch (err){
         res.status(400).json({message: err.message})
     }

@@ -39,16 +39,5 @@ router.get('/:personalNum', async (req, res) => {
     }
 })
 
-
-router.get('/', async (req, res) => {
-    try {
-        const profiles = await profileSchema.find()
-        res.json(profiles) 
-
-    } catch (err){
-        res.status(400).json({message: err.message})
-    }
-})
-
 // module.exports = router
 export default router
