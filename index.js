@@ -4,6 +4,7 @@ import bodyParser from 'body-parser'
 // Routes
 // import coursesRouter from './routes/courses.js'
 import profileRouter from './routes/profile.js'
+import rangeRouter from './routes/ranges.js'
 
 const app = Express()
 
@@ -28,6 +29,7 @@ app.use(function(req, res, next) {
 
 // Router
 app.use('/profile', profileRouter)
+app.use('/ranges', rangeRouter)
 // app.use('/courses', coursesRouter)
 app.use(Express.json())
 
