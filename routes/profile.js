@@ -1,20 +1,21 @@
 import express from 'express'
+import admin from 'firebase-admin'
 import db from '../db.js'
 
 const router = express.Router()
 
 // DELETE
 router.delete('/', async (req, res) => {
-    
+
 })
 
 // POST
 router.post('/', async (req, res) => {
-    
+
 })
 
 // UPDATE (adding course(s) to profile)
-router.patch('/:personalNum', async(req, res) => {
+router.patch('/:personalNum', async (req, res) => {
     // try {
     //     const updatedProfile = await profileSchema.findOneAndUpdate({ personalNum: req.params.personalNum}, {
     //         $push: {courses: req.body.coursesToAdd}
@@ -40,14 +41,22 @@ router.get('/:personalNum', async (req, res) => {
 })
 
 router.get('/:id/:pass', async (req, res) => {
-    const snapshot = await db.collection('Users').get()
-    console.table(snapshot)
-    snapshot.forEach((doc) => {
-        const data = doc.data()
-        data.tz === req.params.id && data.password === req.params.pass? 
-        res.status(200).json(data) :
+    console.log(req.params.id)
+    console.log(req.params.pass)
+    const user = (await db.collection('users').doc(req.params.id).get()).data()
+    console.log(user.password)
+    user.password === req.params.pass ?
+        res.status(200).json(user) :
         res.status(401).send("you are not authorized")
-    })   
+})
+
+router.post('/:id/ranges', async (req, res) => {
+    const userRef = db.collection('users').doc(req.params.id)
+    const result = await userRef.update({
+        ranges: admin.firestore.FieldValue.arrayUnion(req.body)
+    })
+    console.log(result)
+    res.status(200).send("OK")
 })
 
 // module.exports = router
